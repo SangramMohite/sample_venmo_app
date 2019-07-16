@@ -58,6 +58,10 @@ development:
 test:
   <<: *default
   database: sample_venmo_app_test
+  host: localhost
+  port: 5432
+  username: rails_dev
+  password: railspass
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
