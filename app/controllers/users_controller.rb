@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   
   def index
   	@users = User.paginate(page: params[:page])
+  	render json: @users
   end
 
   def new
@@ -10,6 +11,7 @@ class UsersController < ApplicationController
 
   def show
   	@user = User.find(params[:id])
+  	render json: @user
   end
 
   def create
@@ -34,6 +36,11 @@ class UsersController < ApplicationController
   	else
   		render json: @user.errors.full_messages
   	end
+  end
+
+  def balance
+    @user = User.find(params[:id])
+    render json: @user.account.balance
   end
 
 

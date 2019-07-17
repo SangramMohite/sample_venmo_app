@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-
+	has_one :account, dependent: :destroy
 	before_save {email.downcase! }
 
 	validates :name, presence: true, length: {maximum: 50}

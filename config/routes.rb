@@ -5,5 +5,10 @@ Rails.application.routes.draw do
 	# get '/signup', to: 'users#new'
  #  	post '/signup', to: 'users#create'
 
-	resources :users
+	resources :users do
+		resources :accounts, only: [:index, :create, :destroy, :show]
+		get 'balance', to: 'accounts#balance'
+	end
+	
+	# get 'users/{id}/balance', to: 'accounts#show'
 end
