@@ -1,5 +1,5 @@
 class Account < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, index: {unique: true}
   
   validates :name, presence: true, length: {minimum: 3}
   validates :user_id, presence: true

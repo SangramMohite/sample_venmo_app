@@ -8,4 +8,5 @@ Rails.application.routes.draw do
 			get 'balance', to: 'users#balance'
 		end
 	end
+	resources :friendships, only: [:create, :destroy]
 end
