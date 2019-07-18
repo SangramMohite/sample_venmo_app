@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
 	resources :users do
 		# resources :accounts, only: [:index, :create, :destroy, :show]
-		get 'balance', to: 'users#balance'
+		member do
+			get 'balance', to: 'users#balance'
+		end
 	end
 end

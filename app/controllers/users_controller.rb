@@ -41,9 +41,8 @@ class UsersController < ApplicationController
   def balance
     user = User.find_by(id: params[:id])
     if user
-      account = Account.find_by(user_id: user.id)
-      if account
-        render json: account.balance
+      if !user.account.nil?
+        render json: user.account.balance
       else
         render json: {"error": "No account exists for user"}
       end 
