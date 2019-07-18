@@ -38,24 +38,7 @@ class AccountsController < ApplicationController
 		end		
 	end
 
-	def balance
-		# user_id = user_params
-		# @user = User.find_by(id: user_id)
-		@user = get_user
-		if @user
-			@account = Account.find_by(user_id: @user.id)
-			if @account
-				render json: @account.balance
-			else
-				render json: {"error": "No account exists for user"}
-			end	
-		else
-			render json: {"error": "No user exists"}
-		end
-		
-	end
-
-	  private
+  private
 
   def user_params
   	params.require(:user_id)
