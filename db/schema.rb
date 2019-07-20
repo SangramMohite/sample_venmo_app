@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_18_055758) do
+ActiveRecord::Schema.define(version: 2019_07_18_230459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,18 @@ ActiveRecord::Schema.define(version: 2019_07_18_055758) do
     t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.bigint "user_id"
+    t.integer "friend_id"
+    t.integer "amount"
+    t.string "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["friend_id", "created_at"], name: "index_payments_on_friend_id_and_created_at"
+    t.index ["user_id", "created_at"], name: "index_payments_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -43,4 +55,5 @@ ActiveRecord::Schema.define(version: 2019_07_18_055758) do
   end
 
   add_foreign_key "accounts", "users"
+  add_foreign_key "payments", "users"
 end

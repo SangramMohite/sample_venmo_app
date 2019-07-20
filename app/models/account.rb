@@ -8,4 +8,10 @@ class Account < ApplicationRecord
   
   validates :balance, presence: true, numericality: {greater_than: -1}
 
+  def add_to_balance(amount)
+  	balance = self.balance
+  	balance += amount 
+  	self.update_attributes(balance: balance)
+  end
+
 end
