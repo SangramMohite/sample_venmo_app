@@ -1,6 +1,8 @@
 class Payment < ApplicationRecord
   belongs_to :user
 
+  default_scope -> {order(created_at: :desc)}
+
   validates :user, presence: true
   validates :friend_id, presence: true  
   

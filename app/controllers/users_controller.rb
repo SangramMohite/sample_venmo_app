@@ -89,11 +89,48 @@ class UsersController < ApplicationController
     end
   end
 
-  private
+  def feed
 
-  def get_user(id)
-    User.find_by(id: id)
+    feed_id = feed_params
+    user = get_user(feed_id[:id])
+    if user
+      feed_users = [user.id]
+      feed_users += user.friendships.pluck(:friend_id)
+      feed_users += Friendship.where(friend_id: user.id).pluck(:user_id)
+      
+      payments = Payment.where("friend_id IN (?)", feed_users).or(
+                  Payment.where("user_id IN (?)", feed_users)
+                  ).paginate(page: params[:page_number], per_page: 10)
+
+      users = User.where("id IN (?)", feed_users)
+      users_hash = {}
+
+      users.each do |user|
+        users_hash[user.id] = user.name
+      end
+
+      if payments
+        users = User.where("id IN (?)", feed_users)
+        user_feed = [] 
+        payments.each do |payment|
+          message = "#{users_hash[payment.user_id]} paid #{users_hash[payment.friend_id]} on #{payment.created_at}"
+          if payment.message
+            message += " for #{payment.message}"
+            user_feed.push(message)
+          end
+        end
+        render json: user_feed
+      else
+        render json: {"message": "no feeds"}
+      end
+    else
+      render json: {"error": "User does not exist"}
+    end
   end
+
+
+# Private methods
+  private
 
   def user_params
   	params.require(:user).permit(:name, :email)
@@ -101,6 +138,14 @@ class UsersController < ApplicationController
 
   def payment_params
     params.require(:payment_data).permit(:id, :friend_id, :amount, :message)
+  end
+
+  def feed_params
+    params.permit(:id)
+  end
+
+  def get_user(id)
+    User.find_by(id: id)
   end
 
   def is_valid_amount?(amount)

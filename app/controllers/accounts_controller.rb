@@ -1,13 +1,13 @@
 class AccountsController < ApplicationController
 
 	def index
-		@user = get_user		
-		if @user
-			@account = Account.find_by(user_id: @user.id)
-			if @account
-				render json: @account
+		user = get_user		
+		if user
+			account = Account.find_by(user_id: user.id)
+			if account
+				render json: account
 			else
-				render json: {"error": "No account exists for user #{@user.name}"}
+				render json: {"error": "No account exists for user #{user.name}"}
 			end
 		else
 			render json: {"error": "user does not exist"}
@@ -18,20 +18,20 @@ class AccountsController < ApplicationController
 	end
 
 	def create
-		@user = User.find_by(id: account_params[:user_id])
-		if @user
-			if !Account.find_by(user_id: @user.id)			
-				@account = @user.build_account(name: params[:name], balance:  params[:balance]) 
-				if @account.save
+		user = get_user(params[:user_id])
+		if user
+			if !Account.find_by(user_id: user.id)			
+				account = user.build_account(name: params[:name], balance:  params[:balance]) 
+				if account.save
 				# saved account to db is successful
-	  				render json: @account
+	  				render json: account
 	  			else
 			  		# render 'new' which will give users the error messages of why saving failed.
-			  		render json: @account.errors.full_messages
+			  		render json: account.errors.full_messages
 			  	end
 			  else
 			  	# redirect user to settings page or delete account page with their account loaded.
-			  		render json: {"error": "Account for #{@user.name} already exists. Only one account per user."}
+			  		render json: {"error": "Account for #{user.name} already exists. Only one account per user."}
 			  	end
 		else
 			render json: {"error": "User does not exist"}
@@ -48,8 +48,8 @@ class AccountsController < ApplicationController
   	params.require(:account).permit(:user_id, :name, :balance)
   end
 
-  def get_user
-  	User.find_by(id: user_params)
+  def get_user(user_id)
+  	User.find_by(id: user_id)
   end
 
 end
